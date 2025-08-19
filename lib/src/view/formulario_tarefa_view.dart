@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lista_tarefa/src/components/text_field.dart';
 import 'package:lista_tarefa/src/model/lista_tarefas_model.dart';
 import 'package:lista_tarefa/src/utils/constantes.dart';
 
@@ -23,6 +24,7 @@ class _FormularioTarefaViewState extends State<FormularioTarefaView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text("Adicionar Tarefa", style: TextStyle(color: Colors.white)),
         centerTitle: true,
@@ -30,32 +32,28 @@ class _FormularioTarefaViewState extends State<FormularioTarefaView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextField(
-                controller: tarefaText,
-                style: TextStyle(fontSize: 16.0),
-                decoration: InputDecoration(
-                  icon: Icon(Icons.task_outlined),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFieldComponente(
+                  controller: tarefaText,
+                  icone: Icon(Icons.task_outlined),
                   labelText: "Tarefa",
-                  hintText: "Informe a tarefa",
+                  hinText: "Informe a tarefa",
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0),
-                child: TextField(
-                  controller: observacaoText,
-                  style: TextStyle(fontSize: 16.0),
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.article_outlined),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: TextFieldComponente(
+                    controller: observacaoText,
+                    icone: Icon(Icons.article_outlined),
                     labelText: "Observação",
-                    hintText: "Informe a observação da tarefa",
+                    hinText: "Informe a observação da tarefa",
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
