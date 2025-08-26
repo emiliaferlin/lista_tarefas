@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lista_tarefa/src/components/card_lista_tarefas.dart';
-import 'package:lista_tarefa/src/model/lista_tarefas_model.dart';
+import 'package:lista_tarefa/src/components/cards/card_tarefa.dart';
+import 'package:lista_tarefa/src/database/tarefaDao.dart';
+import 'package:lista_tarefa/src/model/tarefa_model.dart';
 import 'package:lista_tarefa/src/view/formulario_tarefa_view.dart';
 
 class ListaTarefasView extends StatefulWidget {
@@ -11,7 +12,7 @@ class ListaTarefasView extends StatefulWidget {
 }
 
 class _ListaTarefasViewState extends State<ListaTarefasView> {
-  List<ListaTarefasModel> tarefas = [];
+  Tarefadao db = Tarefadao();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,20 +26,47 @@ class _ListaTarefasViewState extends State<ListaTarefasView> {
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                itemCount: tarefas.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      tarefas.remove(tarefas[index]);
-                      setState(() {});
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: const Text('Tarefa Excluída!')),
-                      );
-                    },
-                    child: CardListaTarefas(dadosTarefa: tarefas[index]),
-                  );
+              child: FutureBuilder<List<TarefasModel>>(
+                initialData: [],
+                future: db.findAll(),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.done:
+                      if (snapshot.data != null) {
+                        List<TarefasModel>? tarefas = snapshot.data;
+                        return ListView.builder(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          itemCount: tarefas?.length,
+                          itemBuilder: (context, index) {
+                            return CardTarefa(
+                              dadosTarefa: tarefas?[index],
+                              db: db,
+                              onChangedCheckBox: (value) {
+                                TarefasModel tarefa = TarefasModel(
+                                  id: tarefas?[index].id,
+                                  descricao: tarefas?[index].descricao,
+                                  observacao: tarefas?[index].observacao,
+                                  status: value == true ? 1 : 0,
+                                );
+                                db.update(tarefa);
+                                setState(() {});
+                                if (value == true) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Tarefa Concluída!'),
+                                    ),
+                                  );
+                                }
+                              },
+                            );
+                          },
+                        );
+                      } else {
+                        return Center(child: Text("Carregando os dados..."));
+                      }
+                    default:
+                      return Center(child: Text("Carregando os dados..."));
+                  }
                 },
               ),
             ),
@@ -51,15 +79,10 @@ class _ListaTarefasViewState extends State<ListaTarefasView> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return FormularioTarefaView();
+                return FormularioTarefaView(isNovatarefa: true);
               },
             ),
-          ).then((value) {
-            if (value is ListaTarefasModel) {
-              tarefas.add(value);
-              setState(() {});
-            }
-          });
+          );
         },
         child: Icon(Icons.add_task_outlined, color: Colors.white, size: 28.0),
       ),

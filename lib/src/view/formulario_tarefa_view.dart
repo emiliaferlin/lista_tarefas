@@ -1,19 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:lista_tarefa/src/components/text_field.dart';
-import 'package:lista_tarefa/src/model/lista_tarefas_model.dart';
+import 'package:lista_tarefa/src/components/fields/text_form_field.dart';
+import 'package:lista_tarefa/src/model/tarefa_model.dart';
 import 'package:lista_tarefa/src/utils/constantes.dart';
+import 'package:lista_tarefa/src/database/tarefaDao.dart';
+import 'package:lista_tarefa/src/view/lista_tarefas_view.dart';
 
 class FormularioTarefaView extends StatefulWidget {
-  const FormularioTarefaView({super.key});
+  final TarefasModel? tarefa;
+  final bool isNovatarefa;
+  const FormularioTarefaView({
+    super.key,
+    this.tarefa,
+    required this.isNovatarefa,
+  });
 
   @override
   State<FormularioTarefaView> createState() => _FormularioTarefaViewState();
 }
 
 class _FormularioTarefaViewState extends State<FormularioTarefaView> {
-  final GlobalKey _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController tarefaText = TextEditingController();
   TextEditingController observacaoText = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.isNovatarefa == false &&
+        widget.tarefa?.id != null &&
+        widget.tarefa?.descricao != null) {
+      tarefaText.text = widget.tarefa?.descricao ?? "";
+      observacaoText.text = widget.tarefa?.observacao ?? "";
+      setState(() {});
+    }
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -37,15 +57,21 @@ class _FormularioTarefaViewState extends State<FormularioTarefaView> {
             key: _formKey,
             child: Column(
               children: [
-                TextFieldComponente(
+                TextFormFieldComponente(
                   controller: tarefaText,
                   icone: Icon(Icons.task_outlined),
                   labelText: "Tarefa",
                   hinText: "Informe a tarefa",
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Campo obrigatório";
+                    }
+                    return null;
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 12.0),
-                  child: TextFieldComponente(
+                  child: TextFormFieldComponente(
                     controller: observacaoText,
                     icone: Icon(Icons.article_outlined),
                     labelText: "Observação",
@@ -62,20 +88,45 @@ class _FormularioTarefaViewState extends State<FormularioTarefaView> {
         child: ElevatedButton.icon(
           style: ElevatedButton.styleFrom(backgroundColor: primaryColor),
           onPressed: () {
-            if (tarefaText.text.isNotEmpty) {
-              ListaTarefasModel tarefa = ListaTarefasModel(
-                id: 1,
-                descricao: tarefaText.text,
-                observacao: observacaoText.text,
-                status: 0,
+            if (_formKey.currentState?.validate() == true) {
+              Tarefadao db = Tarefadao();
+              TarefasModel tarefa = TarefasModel();
+              if (widget.isNovatarefa == false &&
+                  widget.tarefa?.id != null &&
+                  widget.tarefa?.descricao != null) {
+                tarefa = TarefasModel(
+                  id: widget.tarefa?.id,
+                  descricao: tarefaText.text,
+                  observacao: observacaoText.text,
+                  status: widget.tarefa?.status,
+                );
+                db.update(tarefa);
+              } else {
+                tarefa = TarefasModel(
+                  id: 1,
+                  descricao: tarefaText.text,
+                  observacao: observacaoText.text,
+                  status: 0,
+                );
+                db.add(tarefa);
+              }
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ListaTarefasView();
+                  },
+                ),
+                (route) => false,
               );
-              Navigator.pop(context, tarefa);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: const Text('Tarefa Adicionada!')),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: const Text('Escreva a sua tarefa antes!')),
+                SnackBar(
+                  content: Text(
+                    widget.isNovatarefa == true
+                        ? 'Tarefa Adicionada!'
+                        : 'Tarefa Editada!',
+                  ),
+                ),
               );
             }
           },
