@@ -48,9 +48,9 @@ void acaoDespesaReceitaModalBottomSheet(
                     builder: (BuildContext context) {
                       return ModalConfirmacao(
                         title:
-                            'Deseja excluir essa Despesa/Receita ${financeiro.descricao}?',
+                            'Deseja excluir essa ${financeiro.tipo == 0 ? "despesa" : "receita"} ${financeiro.descricao}?',
                         body:
-                            'Após a exclusão, essa Despesa/Receita não será mais exibida para você. ',
+                            'Após a exclusão, essa ${financeiro.tipo == 0 ? "despesa" : "receita"} não será mais exibida para você. ',
                         principal: "Excluir",
                       );
                     },
@@ -68,7 +68,9 @@ void acaoDespesaReceitaModalBottomSheet(
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text('Despesa/Receita Excluída!'),
+                          content: Text(
+                            '${financeiro.tipo == 0 ? "Despesa" : "Receita"} Excluída!',
+                          ),
                         ),
                       );
                     }

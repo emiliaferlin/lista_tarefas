@@ -57,7 +57,9 @@ class _FormularioFinanceiroViewState extends State<FormularioFinanceiroView> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text(
-          "Adicionar Despesa/Receita",
+          widget.financeiroModel?.tipo != null
+              ? "Editar ${widget.financeiroModel?.tipo == 0 ? "Despesa" : "Receita"}"
+              : "Adicionar Receita/Despesa",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -194,8 +196,8 @@ class _FormularioFinanceiroViewState extends State<FormularioFinanceiroView> {
                   SnackBar(
                     content: Text(
                       widget.isNovaDespesaReceita == true
-                          ? 'Despesa/Receita Adicionada!'
-                          : 'Despesa/Receita Editada!',
+                          ? '${despesaReceita == 0 ? "Despesa" : "Receita"} Adicionada!'
+                          : '${despesaReceita == 0 ? "Despesa" : "Receita"} Editada!',
                     ),
                   ),
                 );
@@ -203,7 +205,9 @@ class _FormularioFinanceiroViewState extends State<FormularioFinanceiroView> {
             }
           },
           label: Text(
-            "Salvar Despesa/Receita",
+            widget.financeiroModel?.tipo != null
+                ? "Salvar ${widget.financeiroModel?.tipo == 0 ? "Despesa" : "Receita"}"
+                : "Salvar Receita/Despesa",
             style: TextStyle(color: Colors.white, fontSize: 18.0),
           ),
           icon: Icon(Icons.check, color: Colors.white, size: 24.0),

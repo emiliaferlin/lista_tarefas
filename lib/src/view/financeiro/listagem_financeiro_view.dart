@@ -87,9 +87,13 @@ class _ListagemFinanceiroViewState extends State<ListagemFinanceiroView> {
     db.update(financeiro);
     setState(() {});
     if (value == true) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Despesa/Receita Quitada!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            financ?.tipo == 0 ? "Despesa Quitada!" : "Receita Recebida!",
+          ),
+        ),
+      );
     }
   }
 }
