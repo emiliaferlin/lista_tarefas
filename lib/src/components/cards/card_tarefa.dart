@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lista_tarefa/src/database/tarefaDao.dart';
-import 'package:lista_tarefa/src/model/tarefa_model.dart';
+import 'package:lista_tarefa/src/database/tarefa/tarefaDao.dart';
+import 'package:lista_tarefa/src/model/tarefa/tarefa_model.dart';
 import 'package:lista_tarefa/src/components/modais/modal_acao_tarefa.dart';
 import 'package:lista_tarefa/src/utils/constantes.dart';
 

@@ -1,5 +1,5 @@
 import 'package:lista_tarefa/src/database/database.dart';
-import 'package:lista_tarefa/src/model/tarefa_model.dart';
+import 'package:lista_tarefa/src/model/tarefa/tarefa_model.dart';
 import 'package:sqflite/sqflite.dart';
 
 class Tarefadao {

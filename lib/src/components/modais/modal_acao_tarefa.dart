@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lista_tarefa/src/components/modais/modal_confirmacao.dart';
-import 'package:lista_tarefa/src/database/tarefaDao.dart';
-import 'package:lista_tarefa/src/model/tarefa_model.dart';
-import 'package:lista_tarefa/src/view/formulario_tarefa_view.dart';
-import 'package:lista_tarefa/src/view/lista_tarefas_view.dart';
+import 'package:lista_tarefa/src/components/navigation_bar/navigation_bar.dart';
+import 'package:lista_tarefa/src/database/tarefa/tarefaDao.dart';
+import 'package:lista_tarefa/src/model/tarefa/tarefa_model.dart';
+import 'package:lista_tarefa/src/view/tarefa/formulario_tarefa_view.dart';
 
 void acaoTarefaModalBottomSheet(context, TarefasModel tarefa, Tarefadao db) {
   showModalBottomSheet(
@@ -57,7 +57,7 @@ void acaoTarefaModalBottomSheet(context, TarefasModel tarefa, Tarefadao db) {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return ListaTarefasView();
+                            return BottomNavigationBarApp(indexPage: 0);
                           },
                         ),
                         (route) => false,

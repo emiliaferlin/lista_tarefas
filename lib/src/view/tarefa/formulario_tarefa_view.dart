@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lista_tarefa/src/components/fields/text_form_field.dart';
-import 'package:lista_tarefa/src/model/tarefa_model.dart';
+import 'package:lista_tarefa/src/components/navigation_bar/navigation_bar.dart';
+import 'package:lista_tarefa/src/database/tarefa/tarefaDao.dart';
+import 'package:lista_tarefa/src/model/tarefa/tarefa_model.dart';
 import 'package:lista_tarefa/src/utils/constantes.dart';
-import 'package:lista_tarefa/src/database/tarefaDao.dart';
-import 'package:lista_tarefa/src/view/lista_tarefas_view.dart';
 
 class FormularioTarefaView extends StatefulWidget {
   final TarefasModel? tarefa;
@@ -22,6 +22,8 @@ class _FormularioTarefaViewState extends State<FormularioTarefaView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController tarefaText = TextEditingController();
   TextEditingController observacaoText = TextEditingController();
+  Tarefadao db = Tarefadao();
+  TarefasModel tarefa = TarefasModel();
 
   @override
   void initState() {
@@ -87,34 +89,20 @@ class _FormularioTarefaViewState extends State<FormularioTarefaView> {
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton.icon(
           style: ElevatedButton.styleFrom(backgroundColor: primaryColor),
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState?.validate() == true) {
-              Tarefadao db = Tarefadao();
-              TarefasModel tarefa = TarefasModel();
               if (widget.isNovatarefa == false &&
                   widget.tarefa?.id != null &&
                   widget.tarefa?.descricao != null) {
-                tarefa = TarefasModel(
-                  id: widget.tarefa?.id,
-                  descricao: tarefaText.text,
-                  observacao: observacaoText.text,
-                  status: widget.tarefa?.status,
-                );
-                db.update(tarefa);
+                await updateTarefa();
               } else {
-                tarefa = TarefasModel(
-                  id: 1,
-                  descricao: tarefaText.text,
-                  observacao: observacaoText.text,
-                  status: 0,
-                );
-                db.add(tarefa);
+                await addTarefa();
               }
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return ListaTarefasView();
+                    return BottomNavigationBarApp(indexPage: 0);
                   },
                 ),
                 (route) => false,
@@ -138,5 +126,25 @@ class _FormularioTarefaViewState extends State<FormularioTarefaView> {
         ),
       ),
     );
+  }
+
+  updateTarefa() {
+    tarefa = TarefasModel(
+      id: widget.tarefa?.id,
+      descricao: tarefaText.text,
+      observacao: observacaoText.text,
+      status: widget.tarefa?.status,
+    );
+    db.update(tarefa);
+  }
+
+  addTarefa() {
+    tarefa = TarefasModel(
+      id: 1,
+      descricao: tarefaText.text,
+      observacao: observacaoText.text,
+      status: 0,
+    );
+    db.add(tarefa);
   }
 }

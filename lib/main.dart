@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lista_tarefa/src/components/navigation_bar/navigation_bar.dart';
 import 'package:lista_tarefa/src/utils/constantes.dart';
-import 'package:lista_tarefa/src/view/lista_tarefas_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: primaryColor,
         ),
       ),
-      home: const ListaTarefasView(),
+      home: BottomNavigationBarApp(indexPage: 0),
     );
   }
 }

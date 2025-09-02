@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:lista_tarefa/src/components/cards/card_tarefa.dart';
-import 'package:lista_tarefa/src/database/tarefaDao.dart';
-import 'package:lista_tarefa/src/model/tarefa_model.dart';
-import 'package:lista_tarefa/src/view/formulario_tarefa_view.dart';
+import 'package:lista_tarefa/src/database/tarefa/tarefaDao.dart';
+import 'package:lista_tarefa/src/model/tarefa/tarefa_model.dart';
+import 'package:lista_tarefa/src/view/tarefa/formulario_tarefa_view.dart';
 
-class ListaTarefasView extends StatefulWidget {
-  const ListaTarefasView({super.key});
+class ListagemTarefasView extends StatefulWidget {
+  const ListagemTarefasView({super.key});
 
   @override
-  State<ListaTarefasView> createState() => _ListaTarefasViewState();
+  State<ListagemTarefasView> createState() => _ListagemTarefasViewState();
 }
 
-class _ListaTarefasViewState extends State<ListaTarefasView> {
+class _ListagemTarefasViewState extends State<ListagemTarefasView> {
   Tarefadao db = Tarefadao();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text("Lista de Tarefas", style: TextStyle(color: Colors.white)),
+        title: Text("Tarefas", style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
       body: Padding(
@@ -42,21 +42,7 @@ class _ListaTarefasViewState extends State<ListaTarefasView> {
                               dadosTarefa: tarefas?[index],
                               db: db,
                               onChangedCheckBox: (value) {
-                                TarefasModel tarefa = TarefasModel(
-                                  id: tarefas?[index].id,
-                                  descricao: tarefas?[index].descricao,
-                                  observacao: tarefas?[index].observacao,
-                                  status: value == true ? 1 : 0,
-                                );
-                                db.update(tarefa);
-                                setState(() {});
-                                if (value == true) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Tarefa Concluída!'),
-                                    ),
-                                  );
-                                }
+                                updateStatus(tarefas?[index], value);
                               },
                             );
                           },
@@ -84,8 +70,24 @@ class _ListaTarefasViewState extends State<ListaTarefasView> {
             ),
           );
         },
-        child: Icon(Icons.add_task_outlined, color: Colors.white, size: 28.0),
+        child: Icon(Icons.add, color: Colors.white, size: 28.0),
       ),
     );
+  }
+
+  updateStatus(TarefasModel? taref, bool? value) {
+    TarefasModel tarefa = TarefasModel(
+      id: taref?.id,
+      descricao: taref?.descricao,
+      observacao: taref?.observacao,
+      status: value == true ? 1 : 0,
+    );
+    db.update(tarefa);
+    setState(() {});
+    if (value == true) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Tarefa Concluída!')));
+    }
   }
 }
