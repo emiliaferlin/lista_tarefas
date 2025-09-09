@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lista_tarefa/src/utils/constantes.dart';
 import 'package:lista_tarefa/src/view/financeiro/listagem_financeiro_view.dart';
+import 'package:lista_tarefa/src/view/imagens_gatos/listagem_imagens_gatos_view.dart';
 import 'package:lista_tarefa/src/view/tarefa/listagem_tarefas_view.dart';
 
 class BottomNavigationBarApp extends StatefulWidget {
@@ -17,6 +18,7 @@ class _BottomNavigationBarAppState extends State<BottomNavigationBarApp> {
   static const List<Widget> pagesOptions = <Widget>[
     ListagemTarefasView(),
     ListagemFinanceiroView(),
+    ListagemImagensGatosView(),
   ];
 
   void selectPage(int index) {
@@ -46,6 +48,10 @@ class _BottomNavigationBarAppState extends State<BottomNavigationBarApp> {
           BottomNavigationBarItem(
             icon: Icon(Icons.monetization_on_outlined),
             label: 'Financeiro',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.pets_rounded),
+            label: 'Gatos',
           ),
         ],
         currentIndex: indexPage,
