@@ -32,6 +32,8 @@ class CardTarefa extends StatelessWidget {
                   ),
                   SizedBox(width: 12.0),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(dadosTarefa?.descricao ?? ""),
                       Text(dadosTarefa?.observacao ?? ""),

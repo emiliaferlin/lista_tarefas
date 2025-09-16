@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lista_tarefa/src/components/cards/card_gato.dart';
 import 'package:lista_tarefa/src/model/imagens_gatos/imagens_gatos_model.dart';
+import 'package:lista_tarefa/src/utils/constantes.dart';
 
 class ListagemImagensGatosView extends StatefulWidget {
   const ListagemImagensGatosView({super.key});
@@ -54,14 +55,21 @@ class _ListagemImagensGatosViewState extends State<ListagemImagensGatosView> {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: dadosGatos.length,
-                itemBuilder: (context, index) {
-                  return CardGato(dadosGatos: dadosGatos[index]);
-                },
-              ),
-            ),
+            dadosGatos.isEmpty
+                ? Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: primaryColor,
+                    color: Colors.black,
+                  ),
+                )
+                : Expanded(
+                  child: ListView.builder(
+                    itemCount: dadosGatos.length,
+                    itemBuilder: (context, index) {
+                      return CardGato(dadosGatos: dadosGatos[index]);
+                    },
+                  ),
+                ),
           ],
         ),
       ),

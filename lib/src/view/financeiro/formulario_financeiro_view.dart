@@ -217,26 +217,27 @@ class _FormularioFinanceiroViewState extends State<FormularioFinanceiroView> {
   }
 
   updateDespesaReceita() {
-    financAux = FinanceiroModel(
-      id: widget.financeiroModel?.id,
-      descricao: descricaoText.text,
-      quitada: widget.financeiroModel?.quitada,
-      valor: valorText.text,
-      data: dataText.text,
-      tipo: despesaReceita,
+    db.update(
+      FinanceiroModel(
+        id: widget.financeiroModel?.id,
+        descricao: descricaoText.text,
+        quitada: widget.financeiroModel?.quitada,
+        valor: valorText.text,
+        data: dataText.text,
+        tipo: despesaReceita,
+      ),
     );
-    db.update(financAux);
   }
 
   addDespesaReceita() {
-    financAux = FinanceiroModel(
-      id: 1,
-      descricao: descricaoText.text,
-      quitada: 0,
-      valor: valorText.text,
-      data: dataText.text,
-      tipo: despesaReceita,
+    db.add(
+      FinanceiroModel(
+        descricao: descricaoText.text,
+        quitada: 0,
+        valor: valorText.text,
+        data: dataText.text,
+        tipo: despesaReceita,
+      ),
     );
-    db.add(financAux);
   }
 }

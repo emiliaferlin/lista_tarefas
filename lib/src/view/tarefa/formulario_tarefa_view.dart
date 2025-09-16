@@ -129,22 +129,24 @@ class _FormularioTarefaViewState extends State<FormularioTarefaView> {
   }
 
   updateTarefa() {
-    tarefa = TarefasModel(
-      id: widget.tarefa?.id,
-      descricao: tarefaText.text,
-      observacao: observacaoText.text,
-      status: widget.tarefa?.status,
+    db.update(
+      TarefasModel(
+        id: widget.tarefa?.id,
+        descricao: tarefaText.text,
+        observacao: observacaoText.text,
+        status: widget.tarefa?.status,
+      ),
     );
-    db.update(tarefa);
   }
 
   addTarefa() {
-    tarefa = TarefasModel(
-      id: 1,
-      descricao: tarefaText.text,
-      observacao: observacaoText.text,
-      status: 0,
+    db.add(
+      TarefasModel(
+        id: 1,
+        descricao: tarefaText.text,
+        observacao: observacaoText.text,
+        status: 0,
+      ),
     );
-    db.add(tarefa);
   }
 }
